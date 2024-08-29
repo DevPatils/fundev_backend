@@ -23,14 +23,14 @@ model User {
 
 // InvestingUser model to manage investors
 model InvestingUser {
-  id          Int         @id @default(autoincrement())
-  name        String
-  email       String      @unique
-  password    String
+  id               Int         @id @default(autoincrement())
+  name             String
+  email            String      @unique
+  password         String
   
   // One-to-many relationship: An investor can have multiple investments
-  investments Investment[] // Reference to Investment model
-  startupsInvestedIN Startup[]  @relation("StartupInvestors")// Reference to Startup model
+  investments      Investment[] // Reference to Investment model
+  startupsInvestedIn Startup[] @relation("StartupInvestors") // Reference to Startup model
 }
 
 // Startup model to manage startup listings
