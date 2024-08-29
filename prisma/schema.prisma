@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,4 +5,61 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+// User model to manage platform users (founders, investors)
+model User {
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String    @unique
+  password  String
+  
+  // One-to-many relationship: A user can have multiple startups
+  startups  Startup[] // Reference to Startup model
+
+  // Optional: A user can have multiple investments
+  investments Investment[] // Reference to Investment model
+}
+
+// Investor model to manage investors
+model Investor {
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String    @unique
+  password  String
+  investments Investment[] // One-to-many relationship: An investor can make multiple investments
+}
+
+// Startup model to manage startup listings
+model Startup {
+  id           Int      @id @default(autoincrement())
+  name         String   // Name of the startup
+  description  String   // Description of the startup
+  industry     String   // Industry the startup operates in
+  fundingGoal  Float    // Desired funding goal
+  raisedAmount Float    @default(0.0) // Funds raised so far, initialized to 0
+  createdAt    DateTime @default(now()) // Timestamp for when the startup was created
+  updatedAt    DateTime @updatedAt // Auto-update timestamp on updates
+  
+  // Foreign key to link the startup with the user who created it
+  userId       Int
+  user         User     @relation(fields: [userId], references: [id]) // Reference to User model
+
+  // Optional: A startup can have multiple investments
+  investments  Investment[] // Reference to Investment model
+}
+
+// Investment model to manage investments made by investors in startups
+model Investment {
+  id        Int      @id @default(autoincrement())
+  amount    Float    // Amount invested
+  date      DateTime @default(now()) // Date of the investment
+  
+  // Foreign key to link the investment with the startup
+  startupId Int
+  startup   Startup  @relation(fields: [startupId], references: [id]) // Reference to Startup model
+  
+  // Foreign key to link the investment with the investor who made it
+  investorId Int
+  investor   Investor @relation(fields: [investorId], references: [id]) // Reference to Investor model
 }
