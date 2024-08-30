@@ -51,6 +51,50 @@ userrouter.post('/register', async (req, res) => {
     }
 });
 
+
+
+// Route for logging in : 
+userrouter.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+        // Check if the user exists
+        const user = await prisma.user.findUnique({
+            where: { email }
+        });
+
+        if (!user) {
+            return res.status(400).json({ message: "User not found" });
+        }
+
+        // Compare the password
+        const passwordMatch = await bcrypt.compare(password, user.password);
+
+        if (!passwordMatch) {
+            return res.status(400).json({ message: "Invalid credentials" });
+        }
+
+        // Generate a JWT token
+        const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET);
+
+        // Respond with the user data and token
+        return res.status(200).json({
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+            },
+            token
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+});
+
+
+
 userrouter.post('/register-investor', async (req, res) => {
     const { name, email, password } = req.body;
 
@@ -94,5 +138,7 @@ userrouter.post('/register-investor', async (req, res) => {
         return res.status(500).json({ message: "Internal server error" });
     }
 });
+
+
 
 module.exports = userrouter;

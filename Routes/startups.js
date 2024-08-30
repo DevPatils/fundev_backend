@@ -32,4 +32,6 @@ startuprouter.post('/onboard', fetchUser, async (req, res) => {
     }
 });
 
+
+
 module.exports = startuprouter;
