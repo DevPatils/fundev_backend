@@ -17,9 +17,14 @@ model User {
   // One-to-many relationship: A user can have multiple startups
   startups    Startup[]   // Reference to Startup model
 
-  // Optional: A user can have multiple investments
+  // One-to-many relationship: A user can have multiple investments
   investments Investment[] // Reference to Investment model
+  
+  // One-to-many relationship: A user can file multiple patents
+  patents     Patent[]    // Reference to Patent model
 }
+
+
 
 // InvestingUser model to manage investors
 model InvestingUser {
@@ -54,6 +59,19 @@ model Startup {
   // Many-to-many relationship: A startup can have multiple investors
   investors    InvestingUser[] @relation("StartupInvestors")
 }
+
+model Patent {
+  id            Int       @id @default(autoincrement())
+  title         String
+  description   String
+  inventorName  String
+  filingDate    DateTime
+  userId        Int?
+  user          User?     @relation(fields: [userId], references: [id])
+  status        String?   // Add this field to store status information
+}
+
+
 
 // Investment model to manage investments made by investors in startups
 model Investment {
