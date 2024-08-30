@@ -21,7 +21,8 @@ patentrouter.post('/file-patent', fetchUser, async (req, res) => {
                 inventorName,
                 filingDate,
                 // Optionally link the patent to the authenticated user (if applicable)
-                userId: req.user.id // Assuming there is a userId field in your Patent model
+                userId: req.user.id ,
+                user : req.user.user// Assuming there is a userId field in your Patent model
             }
         });
 
