@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const router = require('./Routes/index');
 const cors = require('cors');
-app.use(express.json());
+app.use(express.json({limit:'10mb'}));
 const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.get('/', (req, res) => {
