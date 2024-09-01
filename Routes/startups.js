@@ -11,7 +11,8 @@ const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret_key";  // Replace 
 
 startuprouter.post('/onboard', fetchUser, async (req, res) => {
     const { name, description, industry, fundingGoal } = req.body;
-
+    const parsedFundingGoal = parseFloat(fundingGoal);
+    console.log(name, description, industry, fundingGoal);
     try {
         // Create a new startup entry and associate it with the authenticated user
         const startup = await prisma.startup.create({
@@ -19,7 +20,7 @@ startuprouter.post('/onboard', fetchUser, async (req, res) => {
                 name,
                 description,
                 industry,
-                fundingGoal,
+                fundingGoal: parsedFundingGoal,
                 userId: req.user.id  // Associate the startup with the logged-in user
             }
         });

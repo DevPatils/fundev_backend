@@ -3,7 +3,7 @@ const prisma = require('../DB/dbconfig.js');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const userrouter = Router();
-
+require('dotenv').config();
 // Secret key for JWT (you should store this in your .env file)
 const JWT_SECRET = process.env.JWT_SECRET ;  // Replace with a strong secret key
 
