@@ -62,7 +62,7 @@ userrouter.post('/login', async (req, res) => {
         const user = await prisma.user.findUnique({
             where: { email }
         });
-
+    
         if (!user) {
             return res.status(400).json({ message: "User not found" });
         }
@@ -139,6 +139,44 @@ userrouter.post('/register-investor', async (req, res) => {
     }
 });
 
+// Route for logging in as an investor : 
+userrouter.post('/login-investor', async (req, res) => {
+    const { email, password } = req.body;
 
+    try {
+        // Check if the investor exists
+        const investor = await prisma.investingUser.findUnique({
+            where: { email }
+        });
+    
+        if (!investor) {
+            return res.status(400).json({ message: "Investor not found" });
+        }
+
+        // Compare the password
+        const passwordMatch = await bcrypt.compare(password, investor.password);
+
+        if (!passwordMatch) {
+            return res.status(400).json({ message: "Invalid credentials" });
+        }
+
+        // Generate a JWT token
+        const token = jwt.sign({ id: investor.id, email: investor.email }, JWT_SECRET);
+
+        // Respond with the investor data and token
+        return res.status(200).json({
+            investor: {
+                id: investor.id,
+                name: investor.name,
+                email: investor.email,
+            },
+            token
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+});
 
 module.exports = userrouter;
