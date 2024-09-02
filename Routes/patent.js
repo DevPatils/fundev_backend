@@ -2,7 +2,7 @@ const { Router } = require('express');
 const prisma = require('../DB/dbconfig.js'); // Import Prisma client
 const fetchUser = require('../Middleware/middleware.js'); // Import the authentication middleware
 const patentrouter = Router();
-// Endpoint to register a new patent application
+
 
 patentrouter.post('/file-patent', fetchUser, async (req, res) => {
     const { title, description, inventorName, filingDate } = req.body;
@@ -20,9 +20,9 @@ patentrouter.post('/file-patent', fetchUser, async (req, res) => {
                 description,
                 inventorName,
                 filingDate,
-                // Optionally link the patent to the authenticated user (if applicable)
+                
                 userId: req.user.id ,
-                user : req.user.user// Assuming there is a userId field in your Patent model
+                user : req.user.user
             }
         });
 
@@ -37,6 +37,16 @@ patentrouter.post('/file-patent', fetchUser, async (req, res) => {
     }
 });
 
+
+patentrouter.get('/getAllPatents',async(req,res)=>{
+    try{
+        const patents = await prisma.patent.findMany();
+        return res.status(200).json({patents});
+    }catch(error){
+        console.error(error);
+        return res.status(500).json({message:"Internal server error"});
+    }
+})
 // Endpoint to update the patent status
 patentrouter.patch('/update-patent/:id', async (req, res) => {
     const { id } = req.params; // Patent ID from URL parameters
