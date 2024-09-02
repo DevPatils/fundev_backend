@@ -62,10 +62,10 @@ patentrouter.get('/get-my-patents', fetchUser, async (req, res) => {
         return res.status(500).json({ message: "Internal server error" });
     }
 });
-// Endpoint to update the patent status
+
 patentrouter.patch('/update-patent/:id', async (req, res) => {
-    const { id } = req.params; // Patent ID from URL parameters
-    const { status } = req.body; // New status from request body
+    const { id } = req.params; 
+    const { status } = req.body; 
 
     try {
         // Check if the provided status is valid
