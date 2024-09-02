@@ -6,6 +6,7 @@ const patentrouter = Router();
 
 patentrouter.post('/file-patent', fetchUser, async (req, res) => {
     const { title, description, inventorName, filingDate } = req.body;
+    const isoFilingDate = new Date(filingDate).toISOString();  // Convert to full ISO DateTime
 
     try {
         // Check if the user is authenticated
@@ -19,7 +20,7 @@ patentrouter.post('/file-patent', fetchUser, async (req, res) => {
                 title,
                 description,
                 inventorName,
-                filingDate,
+                filingDate: isoFilingDate,
                 
                 userId: req.user.id ,
                 user : req.user.user
