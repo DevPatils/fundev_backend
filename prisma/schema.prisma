@@ -52,7 +52,6 @@ model Startup {
   // Foreign key to link the startup with the user who created it
   userId       Int
   user         User          @relation(fields: [userId], references: [id]) // Reference to User model
-  logo        String?       // Add a field to store the logo URL of the startup
   // One-to-many relationship: A startup can have multiple investments
   investments  Investment[]  // Reference to Investment model
 
