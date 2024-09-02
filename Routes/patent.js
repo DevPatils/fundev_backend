@@ -47,6 +47,20 @@ patentrouter.get('/getAllPatents',async(req,res)=>{
         return res.status(500).json({message:"Internal server error"});
     }
 })
+patentrouter.get('/get-my-patents', fetchUser, async (req, res) => {
+    try {
+        // Fetch all patents associated with the authenticated user
+        const patents = await prisma.patent.findMany({
+            where: { userId: req.user.id }
+        });
+
+        return res.status(200).json({ patents });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+});
 // Endpoint to update the patent status
 patentrouter.patch('/update-patent/:id', async (req, res) => {
     const { id } = req.params; // Patent ID from URL parameters

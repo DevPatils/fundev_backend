@@ -7,12 +7,12 @@ const investmentRouter = Router();
 
 investmentRouter.post('/invest', fetchInvestor, async (req, res) => {
     const { startupId, amount } = req.body;
-
+    const parsedAmounnt=parseFloat(amount);
     try {
         // Create a new investment entry and associate it with the authenticated investor
         const investment = await prisma.investment.create({
             data: {
-                amount,
+                amount: parsedAmounnt,
                 startupId,
                 investorId: req.investor.id, // Associate the investment with the logged-in investor
             },
