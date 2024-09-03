@@ -34,5 +34,18 @@ investmentRouter.post('/invest', fetchInvestor, async (req, res) => {
         return res.status(500).json({ message: 'Internal server error' });
     }
 });
+investmentRouter.get('/get-my-investments', fetchInvestor, async (req, res) => {
+    try {
+        // Fetch all investments associated with the authenticated investor
+        const investments = await prisma.investment.findMany({
+            where: { investorId: req.investor.id },
+            include: { startup: true },
+        });
 
+        return res.status(200).json({ investments });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+});
 module.exports = investmentRouter;
